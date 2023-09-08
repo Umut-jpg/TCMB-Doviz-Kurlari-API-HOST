@@ -8,6 +8,7 @@ from flask import Flask, jsonify
 from evds import evdsAPI
 from flask_cors import CORS 
 from datetime  import datetime
+import json
 app = Flask(__name__)
 CORS(app) 
 @app.route('/')
@@ -18,8 +19,8 @@ current_dateTime = datetime.now()
 def get_data():
     evds = evdsAPI('WRQmTwGYmQ')
     data = evds.get_data(['TP.DK.USD.A.YTL','TP.DK.EUR.A.YTL'], startdate=f"{current_dateTime.day}-{current_dateTime.month}-{current_dateTime.year}" ,enddate=f"{current_dateTime.day}-{current_dateTime.month}-{current_dateTime.year}")
-    json_data = data.to_json(orient='records')   
-    return jsonify(json_data)
+    data_json = json.loads(data)
+    return jsonify(data_json)
 
 if __name__ == '__main__':
     app.run(host='localhost', port=5000, debug=True)
